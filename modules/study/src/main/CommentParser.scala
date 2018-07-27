@@ -65,7 +65,7 @@ private[study] object CommentParser {
       val circles = str.split(',').toList.map(_.trim).flatMap { c =>
         for {
           color <- c.headOption
-          pos <- Pos posAt c.drop(1)
+          pos <- chess.StdBoard posAt c.drop(1)
         } yield Shape.Circle(toBrush(color), pos)
       }
       Shapes(circles) -> circlesRemoveRegex.replaceAllIn(comment, "").trim
@@ -77,8 +77,8 @@ private[study] object CommentParser {
       val arrows = str.split(',').toList.flatMap { c =>
         for {
           color <- c.headOption
-          orig <- Pos posAt c.drop(1).take(2)
-          dest <- Pos posAt c.drop(3).take(2)
+          orig <- chess.StdBoard posAt c.drop(1).take(2)
+          dest <- chess.StdBoard posAt c.drop(3).take(2)
         } yield Shape.Arrow(toBrush(color), orig, dest)
       }
       Shapes(arrows) -> arrowsRemoveRegex.replaceAllIn(comment, "").trim

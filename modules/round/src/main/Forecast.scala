@@ -49,7 +49,7 @@ object Forecast {
     def is(move: Move) = move.toUci.uci == uci
     def is(move: Uci.Move) = move.uci == uci
 
-    def uciMove = Uci.Move(uci)
+    def uciMove = Uci.Move(uci, chess.StdBoard)
   }
 
   implicit val forecastStepJsonFormat = Json.format[Step]

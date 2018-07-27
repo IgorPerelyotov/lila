@@ -18,7 +18,7 @@ final class BotPlayer(
 
   def apply(pov: Pov, me: User, uciStr: String): Funit =
     lila.common.Future.delay((pov.game.hasAi ?? 500) millis) {
-      Uci(uciStr).fold(fufail[Unit](s"Invalid UCI: $uciStr")) { uci =>
+      Uci(uciStr, chess.StdBoard).fold(fufail[Unit](s"Invalid UCI: $uciStr")) { uci =>
         lila.mon.bot.moves(me.username)()
         if (!pov.isMyTurn) fufail("Not your turn, or game already over")
         else {

@@ -102,7 +102,7 @@ object DataForm {
   }
   val positionDefault = StartingPosition.initial.fen
 
-  val validVariants = List(Standard, Chess960, KingOfTheHill, ThreeCheck, Antichess, Atomic, Horde, RacingKings, Crazyhouse)
+  val validVariants = List(Standard, Chess960, KingOfTheHill, ThreeCheck, Antichess, Atomic, Horde, RacingKings, Crazyhouse, Capablanca)
 
   def guessVariant(from: String): Option[Variant] = validVariants.find { v =>
     v.key == from || parseIntOption(from).exists(v.id ==)

@@ -42,17 +42,17 @@ private object PgnStorage {
         }.toMap,
         positionHashes = decoded.positionHashes,
         unmovedRooks = UnmovedRooks(unmovedRooks),
-        lastMove = Option(decoded.lastUci) flatMap Uci.apply,
+        lastMove = Option(decoded.lastUci) flatMap (Uci.apply(_, chess.StdBoard)),
         castles = Castles(
-          whiteKingSide = unmovedRooks(Pos.H1),
-          whiteQueenSide = unmovedRooks(Pos.A1),
-          blackKingSide = unmovedRooks(Pos.H8),
-          blackQueenSide = unmovedRooks(Pos.A8)
+          whiteKingSide = unmovedRooks(StdBoard.H1),
+          whiteQueenSide = unmovedRooks(StdBoard.A1),
+          blackKingSide = unmovedRooks(StdBoard.H8),
+          blackQueenSide = unmovedRooks(StdBoard.A8)
         )
       )
     }
 
-    private def chessPos(sq: Integer): Option[Pos] = Pos.posAt(JavaSquare.file(sq) + 1, JavaSquare.rank(sq) + 1)
+    private def chessPos(sq: Integer): Option[Pos] = StdBoard.posAt(JavaSquare.file(sq) + 1, JavaSquare.rank(sq) + 1)
     private def chessRole(role: JavaRole): Role = role match {
       case JavaRole.PAWN => Pawn
       case JavaRole.KNIGHT => Knight

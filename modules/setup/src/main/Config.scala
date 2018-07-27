@@ -116,7 +116,8 @@ trait BaseConfig {
       chess.variant.Antichess.id :+
       chess.variant.Atomic.id :+
       chess.variant.Horde.id :+
-      chess.variant.RacingKings.id
+      chess.variant.RacingKings.id :+
+      chess.variant.Capablanca
   val variantsWithFenAndVariants =
     variantsWithVariants :+ FromPosition.id
 

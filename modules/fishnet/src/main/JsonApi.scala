@@ -69,7 +69,7 @@ object JsonApi {
     ) extends Request with Result
 
     case class MoveResult(bestmove: String) {
-      def uci: Option[Uci] = Uci(bestmove)
+      def uci: Option[Uci] = Uci(bestmove, chess.StdBoard)
     }
 
     case class PostAnalysis(
@@ -198,7 +198,7 @@ object JsonApi {
     implicit val PostMoveReads = Json.reads[Request.PostMove]
     implicit val ScoreReads = Json.reads[Request.Evaluation.Score]
     implicit val uciListReads = Reads.of[String] map { str =>
-      ~Uci.readList(str)
+      ~Uci.readList(str, chess.StdBoard)
     }
 
     implicit val EvaluationReads: Reads[Request.Evaluation] = (

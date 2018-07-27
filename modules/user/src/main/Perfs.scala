@@ -16,6 +16,7 @@ case class Perfs(
     horde: Perf,
     racingKings: Perf,
     crazyhouse: Perf,
+    capablanca: Perf,
     ultraBullet: Perf,
     bullet: Perf,
     blitz: Perf,
@@ -103,6 +104,7 @@ case class Perfs(
     "horde" -> horde,
     "racingKings" -> racingKings,
     "crazyhouse" -> crazyhouse,
+    "capablanca" -> capablanca,
     "ultraBullet" -> ultraBullet,
     "bullet" -> bullet,
     "blitz" -> blitz,
@@ -134,6 +136,7 @@ case class Perfs(
     case PerfType.Horde => horde
     case PerfType.RacingKings => racingKings
     case PerfType.Crazyhouse => crazyhouse
+    case PerfType.Capablanca => capablanca
     case PerfType.Puzzle => puzzle
   }
 
@@ -173,7 +176,7 @@ case object Perfs {
 
   val default = {
     val p = Perf.default
-    Perfs(p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p)
+    Perfs(p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p, p)
   }
 
   def variantLens(variant: chess.variant.Variant): Option[Perfs => Perf] = variant match {
@@ -186,6 +189,7 @@ case object Perfs {
     case chess.variant.Horde => Some(_.horde)
     case chess.variant.RacingKings => Some(_.racingKings)
     case chess.variant.Crazyhouse => Some(_.crazyhouse)
+    case chess.variant.Capablanca => Some(_.capablanca)
     case _ => none
   }
 
@@ -214,6 +218,7 @@ case object Perfs {
         horde = perf("horde"),
         racingKings = perf("racingKings"),
         crazyhouse = perf("crazyhouse"),
+        capablanca = perf("capablanca"),
         ultraBullet = perf("ultraBullet"),
         bullet = perf("bullet"),
         blitz = perf("blitz"),

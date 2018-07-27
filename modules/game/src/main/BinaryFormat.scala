@@ -186,7 +186,7 @@ object BinaryFormat {
       doRead(ints(0), ints(1))
     }
 
-    private def posAt(x: Int, y: Int) = Pos.posAt(x + 1, y + 1)
+    private def posAt(x: Int, y: Int) = StdBoard.posAt(x + 1, y + 1)
 
     private def doRead(b1: Int, b2: Int) =
       CastleLastMove(
@@ -194,14 +194,14 @@ object BinaryFormat {
         lastMove = for {
           orig ← posAt((b1 & 15) >> 1, ((b1 & 1) << 2) + (b2 >> 6))
           dest ← posAt((b2 & 63) >> 3, b2 & 7)
-          if orig != Pos.A1 || dest != Pos.A1
+          if orig != StdBoard.A1 || dest != StdBoard.A1
         } yield Uci.Move(orig, dest)
       )
   }
 
   object piece {
 
-    private val groupedPos = Pos.all grouped 2 collect {
+    private val groupedPos = StdBoard.all grouped 2 collect {
       case List(p1, p2) => (p1, p2)
     } toArray
 
@@ -222,7 +222,7 @@ object BinaryFormat {
       def intPiece(int: Int): Option[Piece] =
         intToRole(int & 7, variant) map { role => Piece(Color((int & 8) == 0), role) }
       val pieceInts = ba.value flatMap splitInts
-      (Pos.all zip pieceInts).flatMap {
+      (StdBoard.all zip pieceInts).flatMap {
         case (pos, int) => intPiece(int) map (pos -> _)
       }(breakOut)
     }
@@ -248,6 +248,8 @@ object BinaryFormat {
       case Rook => 3
       case Knight => 4
       case Bishop => 5
+      case Archbishop => 6
+      case Cancellor => 7
     }
   }
 
@@ -272,8 +274,8 @@ object BinaryFormat {
 
     private val arrIndexes = 0 to 1
     private val bitIndexes = 0 to 7
-    private val whiteStd = Set(Pos.A1, Pos.H1)
-    private val blackStd = Set(Pos.A8, Pos.H8)
+    private val whiteStd = Set(StdBoard.A1, StdBoard.H1)
+    private val blackStd = Set(StdBoard.A8, StdBoard.H8)
 
     def read(ba: ByteArray) = UnmovedRooks {
       var set = Set.empty[Pos]
@@ -282,7 +284,7 @@ object BinaryFormat {
         if (int != 0) {
           if (int == -127) set = if (i == 0) whiteStd else set ++ blackStd
           else bitIndexes.foreach { j =>
-            if (bitAt(int, j) == 1) set = set + Pos.posAt(8 - j, 1 + 7 * i).get
+            if (bitAt(int, j) == 1) set = set + StdBoard.posAt(8 - j, 1 + 7 * i).get
           }
         }
       }

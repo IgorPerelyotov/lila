@@ -41,6 +41,8 @@ final class PerfsUpdater(
             updateRatings(ratingsW.racingKings, ratingsB.racingKings, result, system)
           case chess.variant.Crazyhouse =>
             updateRatings(ratingsW.crazyhouse, ratingsB.crazyhouse, result, system)
+          case chess.variant.Capablanca =>
+            updateRatings(ratingsW.capablanca, ratingsB.capablanca, result, system)
           case chess.variant.Standard => game.speed match {
             case Speed.Bullet =>
               updateRatings(ratingsW.bullet, ratingsB.bullet, result, system)
@@ -83,6 +85,7 @@ final class PerfsUpdater(
       horde: Rating,
       racingKings: Rating,
       crazyhouse: Rating,
+      capablanca: Rating,
       ultraBullet: Rating,
       bullet: Rating,
       blitz: Rating,
@@ -100,6 +103,7 @@ final class PerfsUpdater(
     horde = perfs.horde.toRating,
     racingKings = perfs.racingKings.toRating,
     crazyhouse = perfs.crazyhouse.toRating,
+    capablanca = perfs.capablanca.toRating,
     ultraBullet = perfs.ultraBullet.toRating,
     bullet = perfs.bullet.toRating,
     blitz = perfs.blitz.toRating,

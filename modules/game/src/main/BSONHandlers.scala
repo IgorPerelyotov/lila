@@ -49,7 +49,7 @@ object BSONHandlers {
           black = Pocket(black.map(_.role))
         )
       },
-      promoted = r.str("t").flatMap(chess.Pos.piotr)(breakOut)
+      promoted = r.str("t").flatMap(chess.StdBoard.piotr)(breakOut)
     )
 
     def writes(w: BSON.Writer, o: Crazyhouse.Data) = BSONDocument(

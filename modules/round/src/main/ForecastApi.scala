@@ -9,6 +9,7 @@ import scala.concurrent.Promise
 
 import chess.format.Uci
 import chess.Pos
+import chess.StdBoard
 import Forecast.Step
 import lila.game.{ Pov, Game }
 import lila.hub.actorApi.map.Tell
@@ -16,7 +17,7 @@ import lila.hub.actorApi.map.Tell
 final class ForecastApi(coll: Coll, roundMap: akka.actor.ActorSelection) {
 
   private implicit val PosBSONHandler = new BSONHandler[BSONString, Pos] {
-    def read(bsonStr: BSONString): Pos = Pos.posAt(bsonStr.value) err s"No such pos: ${bsonStr.value}"
+    def read(bsonStr: BSONString): Pos = StdBoard.posAt(bsonStr.value) err s"No such pos: ${bsonStr.value}"
     def write(x: Pos) = BSONString(x.key)
   }
 
@@ -48,7 +49,7 @@ final class ForecastApi(coll: Coll, roundMap: akka.actor.ActorSelection) {
     steps: Forecast.Steps
   ): Funit =
     if (!pov.isMyTurn) funit
-    else Uci.Move(uciMove).fold[Funit](fufail(s"Invalid move $uciMove on $pov")) { uci =>
+    else Uci.Move(uciMove, chess.StdBoard).fold[Funit](fufail(s"Invalid move $uciMove on $pov")) { uci =>
       val promise = Promise[Unit]
       roundMap ! Tell(pov.gameId, actorApi.round.HumanPlay(
         playerId = pov.playerId,

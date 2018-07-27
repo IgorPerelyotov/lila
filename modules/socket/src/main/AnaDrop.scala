@@ -51,8 +51,8 @@ object AnaDrop {
   def parse(o: JsObject) = for {
     d ← o obj "d"
     role ← d str "role" flatMap chess.Role.allByName.get
-    pos ← d str "pos" flatMap chess.Pos.posAt
     variant = chess.variant.Variant orDefault ~d.str("variant")
+    pos ← d str "pos" flatMap variant.boardType.posAt
     fen ← d str "fen"
     path ← d str "path"
     chapterId = d str "ch"

@@ -30,7 +30,7 @@ object ServerEval {
             moves = chapter.root.mainline.map(_.move.san),
             initialFen = chapter.root.fen.value.some,
             variant = chapter.setup.variant
-          ).toOption.map(_.map(chess.format.Uci.apply).flatten) | List.empty,
+          ).toOption.map(_.map(chess.format.Uci.apply(_, chess.StdBoard)).flatten) | List.empty,
           userId = userId.some
         )
       }

@@ -33,7 +33,7 @@ case class Puzzle(
 
   def withVote(f: AggregateVote => AggregateVote) = copy(vote = f(vote))
 
-  def initialMove: Uci.Move = history.lastOption flatMap Uci.Move.apply err s"Bad initial move $this"
+  def initialMove: Uci.Move = history.lastOption flatMap (Uci.Move.apply(_, chess.StdBoard)) err s"Bad initial move $this"
 
   def fenAfterInitialMove: Option[String] = {
     for {
@@ -78,7 +78,7 @@ object Puzzle {
   import lila.db.BSON
   import BSON.BSONJodaDateTimeHandler
   private implicit val lineBSONHandler = new BSONHandler[BSONDocument, Lines] {
-    private def readMove(move: String) = chess.Pos.doublePiotrToKey(move take 2) match {
+    private def readMove(move: String) = chess.StdBoard.doublePiotrToKey(move take 2) match {
       case Some(m) => s"$m${move drop 2}"
       case _ => sys error s"Invalid piotr move notation: $move"
     }
@@ -93,7 +93,7 @@ object Puzzle {
       case BSONElement(move, value) =>
         throw new Exception(s"Can't read value of $move: $value")
     }(breakOut)
-    private def writeMove(move: String) = chess.Pos.doubleKeyToPiotr(move take 4) match {
+    private def writeMove(move: String) = chess.StdBoard.doubleKeyToPiotr(move take 4) match {
       case Some(m) => s"$m${move drop 4}"
       case _ => sys error s"Invalid move notation: $move"
     }

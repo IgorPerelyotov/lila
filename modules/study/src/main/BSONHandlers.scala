@@ -3,7 +3,7 @@ package lila.study
 import chess.format.pgn.{ Glyph, Glyphs, Tag, Tags }
 import chess.format.{ Uci, UciCharPair, FEN }
 import chess.variant.{ Variant, Crazyhouse }
-import chess.{ Centis, Pos, Role, PromotableRole }
+import chess.{ Centis, Pos, StdBoard, Role, PromotableRole }
 import org.joda.time.DateTime
 import reactivemongo.bson._
 
@@ -29,7 +29,7 @@ object BSONHandlers {
   implicit val CentisBSONHandler = intIsoHandler(Iso.centisIso)
 
   private implicit val PosBSONHandler = new BSONHandler[BSONString, Pos] {
-    def read(bsonStr: BSONString): Pos = Pos.posAt(bsonStr.value) err s"No such pos: ${bsonStr.value}"
+    def read(bsonStr: BSONString): Pos = StdBoard.posAt(bsonStr.value) err s"No such pos: ${bsonStr.value}"
     def write(x: Pos) = BSONString(x.key)
   }
   implicit val ColorBSONHandler = new BSONHandler[BSONBoolean, chess.Color] {
@@ -61,7 +61,7 @@ object BSONHandlers {
   }
 
   implicit val UciHandler = new BSONHandler[BSONString, Uci] {
-    def read(bs: BSONString): Uci = Uci(bs.value) err s"Bad UCI: ${bs.value}"
+    def read(bs: BSONString): Uci = Uci(bs.value, chess.StdBoard) err s"Bad UCI: ${bs.value}"
     def write(x: Uci) = BSONString(x.uci)
   }
 

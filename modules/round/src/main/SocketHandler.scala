@@ -167,7 +167,7 @@ private[round] final class SocketHandler(
 
   private def parseMove(o: JsObject) = for {
     d ← o obj "d"
-    move <- d str "u" flatMap Uci.Move.apply orElse parseOldMove(d)
+    move <- d str "u" flatMap (Uci.Move.apply(_, chess.StdBoard)) orElse parseOldMove(d)
     blur = d int "b" contains 1
     ackId = d.get[AckId]("a")
   } yield (move, blur, parseLag(d), ackId)
@@ -176,14 +176,14 @@ private[round] final class SocketHandler(
     orig ← d str "from"
     dest ← d str "to"
     prom = d str "promotion"
-    move <- Uci.Move.fromStrings(orig, dest, prom)
+    move <- Uci.Move.fromStrings(orig, dest, prom, chess.StdBoard)
   } yield move
 
   private def parseDrop(o: JsObject) = for {
     d ← o obj "d"
     role ← d str "role"
     pos ← d str "pos"
-    drop <- Uci.Drop.fromStrings(role, pos)
+    drop <- Uci.Drop.fromStrings(role, pos, chess.StdBoard)
     blur = d int "b" contains 1
     ackId = d.get[AckId]("a")
   } yield (drop, blur, parseLag(d), ackId)

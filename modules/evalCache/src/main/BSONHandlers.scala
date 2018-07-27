@@ -21,7 +21,7 @@ private object BSONHandlers {
       else parseIntOption(str) map { c => Score cp Cp(c) }
     private def movesWrite(moves: Moves): String = Uci writeListPiotr moves.value.toList
     private def movesRead(str: String): Option[Moves] =
-      Uci readListPiotr str flatMap (_.toNel) map Moves.apply
+      Uci readListPiotr (str, chess.StdBoard) flatMap (_.toNel) map Moves.apply
     private val scoreSeparator = ':'
     private val pvSeparator = '/'
     private val pvSeparatorStr = pvSeparator.toString

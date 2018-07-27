@@ -58,9 +58,9 @@ object AnaMove {
 
   def parse(o: JsObject) = for {
     d ← o obj "d"
-    orig ← d str "orig" flatMap chess.Pos.posAt
-    dest ← d str "dest" flatMap chess.Pos.posAt
     variant = chess.variant.Variant orDefault ~d.str("variant")
+    orig ← d str "orig" flatMap variant.boardType.posAt
+    dest ← d str "dest" flatMap variant.boardType.posAt
     fen ← d str "fen"
     path ← d str "path"
   } yield AnaMove(

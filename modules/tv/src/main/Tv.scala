@@ -136,6 +136,11 @@ object Tv {
       icon = P.Crazyhouse.iconChar.toString,
       filters = Seq(variant(V.Crazyhouse), freshBlitz, noBot)
     )
+    case object Capablanca extends Channel(
+      name = V.Capablanca.name,
+      icon = P.Capablanca.iconChar.toString,
+      filters = Seq(variant(V.Crazyhouse), freshBlitz, noBot)
+    )
     case object UltraBullet extends Channel(
       name = S.UltraBullet.name,
       icon = P.UltraBullet.iconChar.toString,

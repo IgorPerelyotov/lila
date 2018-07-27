@@ -2,6 +2,7 @@ package lila.study
 
 import chess.format.{ Uci, UciCharPair, FEN }
 import chess.Pos
+import chess.StdBoard
 import play.api.libs.json._
 
 import lila.common.LightUser
@@ -127,7 +128,7 @@ object JsonView {
     JsString(u.toString)
   }
   private implicit val posReader: Reads[Pos] = Reads[Pos] { v =>
-    (v.asOpt[String] flatMap Pos.posAt).fold[JsResult[Pos]](JsError(Nil))(JsSuccess(_))
+    (v.asOpt[String] flatMap StdBoard.posAt).fold[JsResult[Pos]](JsError(Nil))(JsSuccess(_))
   }
   private[study] implicit val pathWrites: Writes[Path] = Writes[Path] { p =>
     JsString(p.toString)

@@ -141,6 +141,14 @@ object PerfType {
     iconChar = ''
   )
 
+  case object Capablanca extends PerfType(
+    19,
+    key = "capablanca",
+    name = chess.variant.Capablanca.name,
+    title = "Capablanca variant",
+    iconChar = 'C'
+  )
+
   case object Puzzle extends PerfType(
     20,
     key = "puzzle",
@@ -185,6 +193,7 @@ object PerfType {
     case Atomic => chess.variant.Atomic
     case Horde => chess.variant.Horde
     case RacingKings => chess.variant.RacingKings
+    case Capablanca => chess.variant.Capablanca
     case _ => chess.variant.Standard
   }
 
@@ -197,6 +206,7 @@ object PerfType {
     case chess.variant.Atomic => Atomic.some
     case chess.variant.Horde => Horde.some
     case chess.variant.RacingKings => RacingKings.some
+    case chess.variant.Capablanca => Capablanca.some
     case _ => none
   }
 

@@ -51,7 +51,7 @@ object Work {
       moves: String
   ) {
 
-    def uciList: List[Uci] = ~(Uci readList moves)
+    def uciList: List[Uci] = ~(Uci readList (moves, chess.StdBoard))
   }
 
   case class Sender(
