@@ -11,6 +11,8 @@ const pieceScores = {
   bishop: 3,
   rook: 5,
   queen: 9,
+  archbishop: 7,
+  cancellor: 8,
   king: 0
 };
 
