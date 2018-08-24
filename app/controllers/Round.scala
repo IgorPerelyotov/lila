@@ -1,13 +1,13 @@
 package controllers
 
+import chess.variant.Capablanca
 import play.api.libs.json._
 import play.api.mvc._
-
 import lila.api.Context
 import lila.app._
 import lila.chat.Chat
 import lila.common.HTTPRequest
-import lila.game.{ Pov, GameRepo, Game => GameModel, PgnDump, PlayerRef }
+import lila.game.{ GameRepo, PgnDump, PlayerRef, Pov, Game => GameModel }
 import lila.tournament.{ TourMiniView, Tournament => Tour }
 import lila.user.{ User => UserModel }
 import views._
@@ -49,6 +49,13 @@ object Round extends LilaController with TheftPrevention {
 
   private def requestAiMove(pov: Pov) = pov.game.playableByAi ?? Env.fishnet.player(pov.game)
 
+  private def boardClass(pov: Pov): String = {
+    pov.game.variant.pp match {
+      case Capablanca => "cg-640"
+      case _ => "cg-512"
+    }
+  }
+
   private def renderPlayer(pov: Pov)(implicit ctx: Context): Fu[Result] = negotiate(
     html = if (!pov.game.started) notFound
     else PreventTheft(pov) {
@@ -68,7 +75,8 @@ object Round extends LilaController with TheftPrevention {
                 cross = crosstable,
                 playing = playing,
                 chatOption = chatOption,
-                bookmarked = bookmarked))
+                bookmarked = bookmarked,
+                boardClass = boardClass(pov).pp))
           }
       }
     }.mon(_.http.response.player.website),

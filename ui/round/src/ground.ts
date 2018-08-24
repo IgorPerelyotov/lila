@@ -71,7 +71,8 @@ function makeConfig(ctrl: RoundController): Config {
     drawable: {
       enabled: true
     },
-    disableContextMenu: true
+    disableContextMenu: true,
+    boardType: data.game.variant.key === 'capablanca' ? 'Capablanca' : 'Standard'
   };
 }
 

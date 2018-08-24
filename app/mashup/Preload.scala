@@ -1,10 +1,11 @@
 package lila.app
 package mashup
 
+import chess.BoardType
 import lila.api.Context
 import lila.event.Event
 import lila.forum.MiniForumPost
-import lila.game.{ Game, Pov, GameRepo }
+import lila.game.{ Game, GameRepo, Pov }
 import lila.playban.TempBan
 import lila.simul.Simul
 import lila.timeline.Entry
@@ -81,5 +82,15 @@ object Preload {
             "opponent" -> opponent
           )
         )
+    }
+
+  def currentBoardType(lightUser: lila.common.LightUser.GetterSync)(user: User): Fu[Option[BoardType]] =
+    GameRepo.playingRealtimeNoAi(user, 10) map {
+      currentBoardType(_, lightUser)(user)
+    }
+
+  private[this] def currentBoardType(povs: List[Pov], lightUser: lila.common.LightUser.GetterSync)(user: User): Option[BoardType] =
+    povs.collectFirst {
+      case pov if pov.game.nonAi => pov.game.variant.boardType
     }
 }

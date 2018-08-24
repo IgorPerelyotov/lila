@@ -7,6 +7,11 @@
   /* Fixes render artifacts after dropping a piece in firefox 47,48 */
   -moz-transform: translate3d(0, 0, 0);
 }
+.cg-640 .cg-board-wrap {
+  width: 640px;
+  height: 512px;
+  -moz-transform: translate3d(0, 0, 0);
+}
 .cg-board {
   position: absolute;
   top: 0;
@@ -36,6 +41,9 @@ square {
   width: 12.5%;
   height: 12.5%;
   pointer-events: none;
+}
+.capaSquare {
+  width: 10%;
 }
 .cg-board square.move-dest {
   background: radial-gradient(rgba(20, 85, 30, 0.3) 17%, #208530 0, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0) 0);
@@ -231,6 +239,9 @@ div.lichess_board > svg {
 }
 .brown .is2d .cg-board {
   background-image: url(../images/board/svg/brown.svg);
+}
+.brown-10x8 .is2d .cg-board {
+  background-image: url(../images/board/svg/brown_10x8.svg);
 }
 .green .is2d .cg-board {
   background-image: url(../images/board/svg/green.svg);

@@ -1,5 +1,6 @@
 package lila.api
 
+import chess.{ BoardType, CapaBoard, StdBoard }
 import play.api.mvc.RequestHeader
 import play.api.i18n.Lang
 
@@ -19,7 +20,8 @@ case class PageData(
     assetVersion: AssetVersion,
     inquiry: Option[lila.mod.Inquiry],
     nonce: Option[Nonce],
-    error: Boolean = false
+    error: Boolean = false,
+    boardType: BoardType = CapaBoard
 )
 
 object PageData {
@@ -55,6 +57,10 @@ sealed trait Context extends lila.user.UserContextWrapper {
   def pref = pageData.pref
   def blindMode = pageData.blindMode
   def nonce = pageData.nonce
+  def boardType = pageData.boardType match {
+    case CapaBoard => "-10x8"
+    case _ => ""
+  }
 
   def currentTheme = lila.pref.Theme(pref.theme)
 

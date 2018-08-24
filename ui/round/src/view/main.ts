@@ -56,6 +56,14 @@ function blindBoard(ctrl: RoundController) {
   ]);
 }
 
+function boardClass(ctl: RoundController): string {
+  const variant = ctl.data.game.variant.key;
+  if (variant == "capablanca")
+    return "cg-640";
+  else
+    return "cg-512";
+}
+
 const emptyMaterialDiff: cg.MaterialDiff = {
   white: {},
   black: {}
@@ -72,7 +80,7 @@ export function main(ctrl: RoundController): VNode {
     material = util.getMaterialDiff(pieces);
     score = util.getScore(pieces) * (bottomColor === 'white' ? 1 : -1);
   } else material = emptyMaterialDiff;
-  return h('div.round.cg-512', [
+  return h(`div.round.${boardClass(ctrl)}`, [
     h('div.lichess_game.gotomove.variant_' + d.game.variant.key, {
       hook: {
         insert: () => window.lichess.pubsub.emit('content_loaded')()

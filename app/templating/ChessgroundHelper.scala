@@ -1,10 +1,9 @@
 package lila.app
 package templating
 
-import chess.{ Color, Board, Pos }
+import chess.{ Board, CapaBoard, Color, Pos }
 import lila.api.Context
 import play.twirl.api.Html
-
 import lila.game.Pov
 
 trait ChessgroundHelper {
@@ -17,12 +16,16 @@ trait ChessgroundHelper {
       val highlights = ctx.pref.highlight ?? lastMove.distinct.map { pos =>
         s"""<square class="last-move" style="top:${top(pos)}%;left:${left(pos)}%"></square>"""
       } mkString ""
+      val boardClass = board.variant.boardType match {
+        case CapaBoard => "capaPiece"
+        case _ => "CapaPiece"
+      }
       val pieces =
         if (ctx.pref.isBlindfold) ""
         else board.pieces.map {
           case (pos, piece) =>
             val klass = s"${piece.color.name} ${piece.role.name}"
-            s"""<piece class="$klass" style="top:${top(pos)}%;left:${left(pos)}%"></piece>"""
+            s"""<piece class="${klass} ${boardClass}" style="top:${top(pos)}%;left:${left(pos)}%"></piece>"""
         } mkString ""
       s"$highlights$pieces"
     }

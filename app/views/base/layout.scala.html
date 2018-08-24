@@ -69,7 +69,7 @@ csp: Option[lila.common.ContentSecurityPolicy] = None)(body: Html)(implicit ctx:
     <meta name="twitter:site" content="@@lichess" />
   </head>
   <body class="preload base @List(
-    ctx.currentTheme.cssClass,
+    ctx.currentTheme.cssClass + ctx.boardType,
     ctx.currentTheme3d.cssClass,
     if (ctx.currentBg == "transp") "dark transp" else ctx.currentBg,
     ctx.currentPieceSet3d,

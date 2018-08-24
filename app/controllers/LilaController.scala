@@ -367,7 +367,8 @@ private[controllers] trait LilaController
             hasFingerprint = hasFingerprint,
             assetVersion = getAssetVersion,
             inquiry = inquiry,
-            nonce = nonce)
+            nonce = nonce,
+            boardType = chess.CapaBoard)
       }
     }
   }
