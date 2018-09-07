@@ -59,7 +59,7 @@ private[game] object GameDiff {
     else {
       val f = PgnStorage.OldBin
       d(oldPgn, _.pgnMoves, writeBytes compose f.encode)
-      d(binaryPieces, _.board.pieces, writeBytes compose BinaryFormat.piece.write)
+      d(binaryPieces, _.board.pieces, writeBytes compose BinaryFormat.piece.write(a.variant))
       d(positionHashes, _.history.positionHashes, w.bytes)
       d(unmovedRooks, _.history.unmovedRooks, writeBytes compose BinaryFormat.unmovedRooks.write)
       d(castleLastMove, makeCastleLastMove, CastleLastMove.castleLastMoveBSONHandler.write)

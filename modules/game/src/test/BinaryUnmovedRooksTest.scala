@@ -1,7 +1,7 @@
 package lila.game
 
 import chess._
-import chess.Pos._
+import chess.StdBoard._
 import org.specs2.mutable._
 
 import lila.db.ByteArray

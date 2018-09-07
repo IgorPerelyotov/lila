@@ -4,7 +4,7 @@ import org.specs2.mutable.Specification
 
 import lila.db.ByteArray
 import chess._
-import Pos._
+import StdBoard._
 
 class BinaryPerfTest extends Specification {
 

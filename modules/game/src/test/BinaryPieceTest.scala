@@ -1,21 +1,24 @@
 package lila.game
 
 import chess._
-import chess.Pos._
 import org.specs2.mutable._
-
 import lila.db.ByteArray
-import chess.variant.Standard
+import chess.variant.{ Capablanca, Standard, Variant }
 
 class BinaryPieceTest extends Specification {
 
   val noop = "00000000"
   def write(all: PieceMap): List[String] =
-    (BinaryFormat.piece write all).showBytes.split(',').toList
+    write(Standard, all)
+  def write(variant: Variant, all: PieceMap): List[String] =
+    (BinaryFormat.piece.write(variant)(all)).showBytes.split(',').toList
   def read(bytes: List[String]): PieceMap =
-    BinaryFormat.piece.read(ByteArray.parseBytes(bytes), Standard)
+    read(Standard, bytes)
+  def read(variant: Variant, bytes: List[String]): PieceMap =
+    BinaryFormat.piece.read(ByteArray.parseBytes(bytes), variant)
 
   "binary pieces" should {
+    import chess.StdBoard._
     "write" should {
       "empty board" in {
         write(Map.empty) must_== List.fill(32)(noop)
@@ -64,6 +67,45 @@ class BinaryPieceTest extends Specification {
         }
         "B1 black pawn" in {
           read("00001110" :: List.fill(31)(noop)) must_== Map(B1 -> Black.pawn)
+        }
+      }
+    }
+  }
+  "Capablanca variant binary pieces" should {
+    import chess.CapaBoard._
+    "write" should {
+      "empty board" in {
+        write(Capablanca, Map.empty) must_== List.fill(80)(noop)
+      }
+      "A1 white king" in {
+        write(Capablanca, Map(A1 -> White.king)) must_== {
+          "00000001" :: List.fill(79)(noop)
+        }
+      }
+      "A1 black knight" in {
+        write(Capablanca, Map(A1 -> Black.knight)) must_== {
+          "00010100" :: List.fill(79)(noop)
+        }
+      }
+      "J8 black cancellor" in {
+        write(Capablanca, Map(J8 -> Black.cancellor)) must_== {
+          List.fill(79)(noop) :+ "00011001"
+        }
+      }
+      "A1 white archbishop, B1 white bishop" in {
+        write(Capablanca, Map(A1 -> White.archbishop, B1 -> White.bishop)) must_== {
+          "00001000" :: "00000101" :: List.fill(78)(noop)
+        }
+      }
+    }
+    "read" should {
+      "empty board" in {
+        read(Capablanca, List.fill(80)(noop)) must_== Map.empty
+        "A1 white archbishop" in {
+          read(Capablanca, "00001000" :: List.fill(79)(noop)) must_== Map(A1 -> White.archbishop)
+        }
+        "A1 black cancellor" in {
+          read(Capablanca, "00011001" :: List.fill(79)(noop)) must_== Map(A1 -> Black.cancellor)
         }
       }
     }

@@ -2,7 +2,7 @@ package lila.study
 
 import chess.format.pgn._
 import chess.format.{ FEN, Uci, UciCharPair }
-import chess.variant
+import chess.{ StdBoard, variant }
 import Node._
 import org.specs2.mutable._
 
@@ -11,9 +11,9 @@ class PgnDumpTest extends Specification {
   val P = PgnDump
 
   def node(ply: Int, uci: String, san: String, children: Children = emptyChildren) = Node(
-    id = UciCharPair(Uci(uci).get),
+    id = UciCharPair(Uci(uci, StdBoard).get),
     ply = ply,
-    move = Uci.WithSan(Uci(uci).get, san),
+    move = Uci.WithSan(Uci(uci, StdBoard).get, san),
     fen = FEN("<fen>"),
     check = false,
     clock = None,

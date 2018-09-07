@@ -1,16 +1,15 @@
 package lila.game
 
 import org.joda.time.DateTime
+
 import scala.collection.breakOut
 import scala.collection.breakOut
 import scala.collection.Searching._
 import scala.util.Try
-
-import chess.variant.Variant
+import chess.variant.{ Capablanca, Standard, Variant }
 import chess.{ ToOptionOpsFromOption => _, _ }
 import chess.format.Uci
 import org.lichess.compression.clock.{ Encoder => ClockEncoder }
-
 import lila.db.ByteArray
 
 object BinaryFormat {
@@ -205,7 +204,30 @@ object BinaryFormat {
       case List(p1, p2) => (p1, p2)
     } toArray
 
-    def write(pieces: PieceMap): ByteArray = {
+    def write(variant: Variant)(pieces: PieceMap): ByteArray = {
+      variant.boardType match {
+        case CapaBoard => writeCapablancaBoard(pieces)
+        case _ => writeStandardBoard(pieces)
+      }
+    }
+
+    def read(ba: ByteArray, variant: Variant): PieceMap = {
+      variant.boardType match {
+        case CapaBoard => readCapablancaBoard(ba, variant)
+        case _ => readStandardBoard(ba, variant)
+      }
+    }
+
+    private def writeCapablancaBoard(pieces: PieceMap): ByteArray = {
+      def posInt(pos: Pos): Int = (pieces get pos).fold(0) { piece =>
+        piece.color.fold(0, 16) + roleToInt(piece.role)
+      }
+      ByteArray(CapaBoard.all map {
+        case p => (posInt(p)).toByte
+      } toArray)
+    }
+
+    private def writeStandardBoard(pieces: PieceMap): ByteArray = {
       def posInt(pos: Pos): Int = (pieces get pos).fold(0) { piece =>
         piece.color.fold(0, 8) + roleToInt(piece.role)
       }
@@ -214,7 +236,7 @@ object BinaryFormat {
       })
     }
 
-    def read(ba: ByteArray, variant: Variant): PieceMap = {
+    def readStandardBoard(ba: ByteArray, variant: Variant): PieceMap = {
       def splitInts(b: Byte) = {
         val int = b.toInt
         Array(int >> 4, int & 0x0F)
@@ -227,8 +249,16 @@ object BinaryFormat {
       }(breakOut)
     }
 
+    def readCapablancaBoard(ba: ByteArray, variant: Variant): PieceMap = {
+      def intPiece(int: Int): Option[Piece] =
+        intToRole(int & 15, variant) map { role => Piece(Color((int & 16) == 0), role) }
+      (CapaBoard.all zip ba.value).flatMap {
+        case (pos, int) => intPiece(int) map (pos -> _)
+      }(breakOut)
+    }
+
     // cache standard start position
-    val standard = write(Board.init(chess.variant.Standard).pieces)
+    val standard = write(Standard)(Board.init(Standard).pieces)
 
     private def intToRole(int: Int, variant: Variant): Option[Role] = int match {
       case 6 => Some(Pawn)
@@ -239,6 +269,8 @@ object BinaryFormat {
       case 5 => Some(Bishop)
       // Legacy from when we used to have an 'Antiking' piece
       case 7 if variant.antichess => Some(King)
+      case 8 if variant.capablanca => Some(Archbishop)
+      case 9 if variant.capablanca => Some(Cancellor)
       case _ => None
     }
     private def roleToInt(role: Role): Int = role match {
@@ -248,8 +280,8 @@ object BinaryFormat {
       case Rook => 3
       case Knight => 4
       case Bishop => 5
-      case Archbishop => 6
-      case Cancellor => 7
+      case Archbishop => 8
+      case Cancellor => 9
     }
   }
 

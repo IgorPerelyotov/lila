@@ -181,7 +181,7 @@ object BSONHandlers {
           val f = PgnStorage.OldBin
           $doc(
             F.oldPgn -> f.encode(o.pgnMoves take Game.maxPlies),
-            F.binaryPieces -> BinaryFormat.piece.write(o.board.pieces),
+            F.binaryPieces -> BinaryFormat.piece.write(o.variant)(o.board.pieces),
             F.positionHashes -> o.history.positionHashes,
             F.unmovedRooks -> o.history.unmovedRooks,
             F.castleLastMove -> CastleLastMove.castleLastMoveBSONHandler.write(CastleLastMove(
