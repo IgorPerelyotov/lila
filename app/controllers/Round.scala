@@ -50,7 +50,7 @@ object Round extends LilaController with TheftPrevention {
   private def requestAiMove(pov: Pov) = pov.game.playableByAi ?? Env.fishnet.player(pov.game)
 
   private def boardClass(pov: Pov): String = {
-    pov.game.variant.pp match {
+    pov.game.variant match {
       case Capablanca => "cg-640"
       case _ => "cg-512"
     }
@@ -76,7 +76,7 @@ object Round extends LilaController with TheftPrevention {
                 playing = playing,
                 chatOption = chatOption,
                 bookmarked = bookmarked,
-                boardClass = boardClass(pov).pp))
+                boardClass = boardClass(pov)))
           }
       }
     }.mon(_.http.response.player.website),
