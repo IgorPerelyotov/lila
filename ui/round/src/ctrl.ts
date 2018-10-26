@@ -261,7 +261,8 @@ export default class RoundController {
 
   sendMove = (orig: cg.Key, dest: cg.Key, prom: cg.Role | undefined, meta: cg.MoveMetadata) => {
     const move: SocketMove = {
-      u: orig + dest
+      u: orig + dest,
+      t: meta.boardType
     };
     if (prom) move.u += (prom === 'knight' ? 'n' : prom[0]);
     if (blur.get()) move.b = 1;
