@@ -167,10 +167,17 @@ private[round] final class SocketHandler(
 
   private def parseMove(o: JsObject) = for {
     d ← o obj "d"
-    move <- d str "u" flatMap (Uci.Move.apply(_, chess.StdBoard)) orElse parseOldMove(d)
+    move <- d str "u" flatMap (Uci.Move.apply(_, selectBoardTypeForUci(d str "t"))) orElse parseOldMove(d)
     blur = d int "b" contains 1
     ackId = d.get[AckId]("a")
   } yield (move, blur, parseLag(d), ackId)
+
+  private def selectBoardTypeForUci(str: Option[String]): chess.BoardType = {
+    str match {
+      case Some("c") => chess.CapaBoard
+      case _ => chess.StdBoard
+    }
+  }
 
   private def parseOldMove(d: JsObject) = for {
     orig ← d str "from"
