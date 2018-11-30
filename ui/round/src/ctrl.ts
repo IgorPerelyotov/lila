@@ -373,7 +373,8 @@ export default class RoundController {
         movable: {
           dests: playing ? util.parsePossibleMoves(d.possibleMoves) : {}
         },
-        check: !!o.check
+        check: !!o.check,
+	boardType: d.game.variant.key == 'capablanca' ? 'Capablanca' : 'Standard'
       });
       if (o.check) sound.check();
       blur.onMove();
